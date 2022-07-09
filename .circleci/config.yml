@@ -31,6 +31,25 @@ jobs:
           paths:
             - project/inventory.txt
 
+  configure-infrastructure:
+    docker:
+      - image: python:3.7-alpine3.16
+    steps:
+      - checkout
+      - attach_workspace:
+          at: ~/
+      - add_ssh_keys:
+            fingerprints: ["ca:0e:3c:d2:b0:fe:9f:c9:28:50:75:17:20:b3:3f:a3"]
+      - run:
+          name: Install Ansible and aws-cli
+          command: |
+            apk add --no-cache aws-cli 
+            apk add --update ansible
+      - run:
+          name: Configure server
+          command: |
+            ansible-playbook -i inventory.txt configure-server.yml -vv
+
   deploy-backend:
     docker:
       # - image: python:3.7-alpine3.16
@@ -65,5 +84,7 @@ workflows:
   create-and-configure:
     jobs:
       - create-backend-infra
-      - deploy-backend:
+      - configure-infrastructure:
           requires: [create-backend-infra]
+      - deploy-backend:
+          requires: [configure-infrastructure]
