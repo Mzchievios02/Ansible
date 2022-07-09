@@ -1,0 +1,17 @@
+Ansible
+├── ansible.cfg
+├── configure-server.yml
+├── deploy-backend.yml
+├── ec2.yml
+├── inventory.txt
+├── param.json
+├── roles
+│   ├── configure-server
+│   │   └── tasks
+│   │       └── main.yml
+│   └── deploy
+│       └── tasks
+│           └── main.yml
+└── tree
+
+5 directories, 9 files
