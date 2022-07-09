@@ -14,11 +14,16 @@ jobs:
             --template-file ec2.yml \
             --tags project=test \
             --stack-name "test-backend-${CIRCLE_WORKFLOW_ID:0:7}"  
- 
+
+      - run:
+          name: Check present working directory and list files
+          command: |
+            pwd
+            ls -l 
       - run:
           name: Add back-end ip to ansible inventory
           command: |
-            cat inventory.txt
+            cat ~/project/inventory.txt
             aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters "Name=tag:project,Values=test" --output text >> ~/project/inventory.txt
             cat inventory.txt             
       - persist_to_workspace:
